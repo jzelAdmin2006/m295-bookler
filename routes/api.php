@@ -18,26 +18,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/books", function () {
-    return DB::select('SELECT * FROM books');
-});
-
-Route::get("/books/{id}", function ($id) {
-    return DB::select('SELECT * FROM books WHERE id = ?', [$id]);
-});
-
-Route::get("/search/{search}", function ($search) {
-    return DB::select('SELECT * FROM books WHERE title LIKE ? OR author LIKE ?', ["%$search%", "%$search%"]);
-});
-
-Route::group(['prefix' => 'book-finder'], function () {
-    Route::get("/slug/{slug}", function ($slug) {
-        return DB::select('SELECT * FROM books WHERE slug = ?', [$slug]);
+Route::group(['prefix' => '/bookler'], function () {
+    Route::get("/books", function () {
+        return DB::select('SELECT * FROM books');
     });
-    Route::get("/year/{year}", function ($year) {
-        return DB::select('SELECT * FROM books WHERE year = ?', [$year]);
+
+    Route::get("/books/{id}", function ($id) {
+        return DB::select('SELECT * FROM books WHERE id = ?', [$id]);
     });
-    Route::get("/max-pages/{pages}", function ($pages) {
-        return DB::select('SELECT * FROM books WHERE pages < ?', [$pages]);
+
+    Route::get("/search/{search}", function ($search) {
+        return DB::select('SELECT * FROM books WHERE title LIKE ? OR author LIKE ?', ["%$search%", "%$search%"]);
+    });
+
+    Route::group(['prefix' => '/book-finder'], function () {
+        Route::get("/slug/{slug}", function ($slug) {
+            return DB::select('SELECT * FROM books WHERE slug = ?', [$slug]);
+        });
+        Route::get("/year/{year}", function ($year) {
+            return DB::select('SELECT * FROM books WHERE year = ?', [$year]);
+        });
+        Route::get("/max-pages/{pages}", function ($pages) {
+            return DB::select('SELECT * FROM books WHERE pages < ?', [$pages]);
+        });
     });
 });
