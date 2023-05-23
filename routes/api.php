@@ -33,4 +33,7 @@ Route::group(['prefix' => 'book-finder'], function () {
     Route::get("/year/{year}", function ($year) {
         return DB::select('SELECT * FROM books WHERE year = ?', [$year]);
     });
+    Route::get("/max-pages/{pages}", function ($pages) {
+        return DB::select('SELECT * FROM books WHERE pages < ?', [$pages]);
+    });
 });
