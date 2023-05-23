@@ -20,22 +20,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '/bookler'], function () {
-    Route::group(['prefix' => '/books'], function () {
-        Route::get('/', [BookController::class, 'findAll']);
-        Route::get('/{id}', [BookController::class, 'findById']);
-    });
-    Route::get('/search/{search}', [BookController::class, 'search']);
+    $controller = BookController::class;
 
-    Route::group(['prefix' => '/book-finder'], function () {
-        Route::get('/slug/{slug}', [BookController::class, 'findBySlug']);
-        Route::get('/year/{year}', [BookController::class, 'findByYear']);
-        Route::get('/max-pages/{pages}', [BookController::class, 'findByPages']);
+    Route::group(['prefix' => '/books'], function () use ($controller) {
+        Route::get('/', [$controller, 'findAll']);
+        Route::get('/{id}', [$controller, 'findById']);
     });
 
-    Route::group(['prefix' => '/meta'], function () {
-        Route::get("/count", [BookController::class, 'getCount']);
-        Route::get("/avg-pages", [BookController::class, 'getAvgPages']);
+    Route::get('/search/{search}', [$controller, 'search']);
+
+    Route::group(['prefix' => '/book-finder'], function () use ($controller) {
+        Route::get('/slug/{slug}', [$controller, 'findBySlug']);
+        Route::get('/year/{year}', [$controller, 'findByYear']);
+        Route::get('/max-pages/{pages}', [$controller, 'findByPages']);
     });
 
-    Route::get("/dashboard", [BookController::class, 'getDashboard']);
+    Route::group(['prefix' => '/meta'], function () use ($controller) {
+        Route::get("/count", [$controller, 'getCount']);
+        Route::get("/avg-pages", [$controller, 'getAvgPages']);
+    });
+
+    Route::get("/dashboard", [$controller, 'getDashboard']);
 });
