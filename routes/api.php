@@ -53,4 +53,15 @@ Route::group(['prefix' => '/bookler'], function () {
             return Book::avg('pages');
         });
     });
+
+    Route::get("/dashboard", function () {
+        $oldestBook = Book::orderBy('year', 'asc')->first();
+        $newestBook = Book::orderBy('year', 'desc')->first();
+
+        return [
+            "books" => Book::count(),
+            "pages" => Book::sum('pages'),
+            "oldest" => $oldestBook ? $oldestBook->title : null,
+            "newest" => $newestBook ? $newestBook->title : null];
+    });
 });
