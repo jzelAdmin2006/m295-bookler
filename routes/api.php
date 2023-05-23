@@ -30,4 +30,7 @@ Route::group(['prefix' => 'book-finder'], function () {
     Route::get("/slug/{slug}", function ($slug) {
         return DB::select('SELECT * FROM books WHERE slug = ?', [$slug]);
     });
+    Route::get("/year/{year}", function ($year) {
+        return DB::select('SELECT * FROM books WHERE year = ?', [$year]);
+    });
 });
