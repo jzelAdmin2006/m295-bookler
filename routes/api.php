@@ -44,4 +44,13 @@ Route::group(['prefix' => '/bookler'], function () {
             return Book::where('pages', '<', $pages)->get();
         });
     });
+
+    Route::group(['prefix' => '/meta'], function () {
+        Route::get("/count", function () {
+            return Book::count();
+        });
+        Route::get("/avg-pages", function () {
+            return Book::avg('pages');
+        });
+    });
 });
