@@ -20,14 +20,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '/bookler'], function () {
-    Route::get("/books", function () {
-        return Book::get();
-    });
+    Route::group(['prefix' => '/books'], function () {
+        Route::get("/", function () {
+            return Book::get();
+        });
 
-    Route::get("/books/{id}", function ($id) {
-        return Book::find($id);
+        Route::get("/{id}", function ($id) {
+            return Book::find($id);
+        });
     });
-
     Route::get("/search/{search}", function ($search) {
         return Book::where('title', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->get();
     });
