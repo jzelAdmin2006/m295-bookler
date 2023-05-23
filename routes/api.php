@@ -26,6 +26,10 @@ Route::get("/books/{id}", function ($id) {
     return DB::select('SELECT * FROM books WHERE id = ?', [$id]);
 });
 
+Route::get("/search/{search}", function ($search) {
+    return DB::select('SELECT * FROM books WHERE title LIKE ? OR author LIKE ?', ["%$search%", "%$search%"]);
+});
+
 Route::group(['prefix' => 'book-finder'], function () {
     Route::get("/slug/{slug}", function ($slug) {
         return DB::select('SELECT * FROM books WHERE slug = ?', [$slug]);
