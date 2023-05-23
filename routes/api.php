@@ -21,3 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get("/books", function () {
     return DB::select('SELECT * FROM books');
 });
+
+Route::get("/books/{id}", function ($id) {
+    return DB::select('SELECT * FROM books WHERE id = ?', [$id]);
+});
