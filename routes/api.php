@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,26 +21,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => '/bookler'], function () {
     Route::get("/books", function () {
-        return DB::select('SELECT * FROM books');
+        return Book::get();
     });
 
     Route::get("/books/{id}", function ($id) {
-        return DB::select('SELECT * FROM books WHERE id = ?', [$id]);
+        return Book::find($id);
     });
 
     Route::get("/search/{search}", function ($search) {
-        return DB::select('SELECT * FROM books WHERE title LIKE ? OR author LIKE ?', ["%$search%", "%$search%"]);
+        return Book::where('title', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->get();
     });
 
     Route::group(['prefix' => '/book-finder'], function () {
         Route::get("/slug/{slug}", function ($slug) {
-            return DB::select('SELECT * FROM books WHERE slug = ?', [$slug]);
+            return Book::where('slug', $slug)->first();
         });
         Route::get("/year/{year}", function ($year) {
-            return DB::select('SELECT * FROM books WHERE year = ?', [$year]);
+            return Book::where('year', $year)->get();
         });
         Route::get("/max-pages/{pages}", function ($pages) {
-            return DB::select('SELECT * FROM books WHERE pages < ?', [$pages]);
+            return Book::where('pages', '<', $pages)->get();
         });
     });
 });
