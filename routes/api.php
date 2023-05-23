@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Book;
+use App\Http\Controllers\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,47 +21,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => '/bookler'], function () {
     Route::group(['prefix' => '/books'], function () {
-        Route::get("/", function () {
-            return Book::get();
-        });
-
-        Route::get("/{id}", function ($id) {
-            return Book::find($id);
-        });
+        Route::get('/', [BookController::class, 'findAll']);
+        Route::get('/{id}', [BookController::class, 'findById']);
     });
-    Route::get("/search/{search}", function ($search) {
-        return Book::where('title', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->get();
-    });
+    Route::get('/search/{search}', [BookController::class, 'search']);
 
     Route::group(['prefix' => '/book-finder'], function () {
-        Route::get("/slug/{slug}", function ($slug) {
-            return Book::where('slug', $slug)->first();
-        });
-        Route::get("/year/{year}", function ($year) {
-            return Book::where('year', $year)->get();
-        });
-        Route::get("/max-pages/{pages}", function ($pages) {
-            return Book::where('pages', '<', $pages)->get();
-        });
+        Route::get('/slug/{slug}', [BookController::class, 'findBySlug']);
+        Route::get('/year/{year}', [BookController::class, 'findByYear']);
+        Route::get('/max-pages/{pages}', [BookController::class, 'findByPages']);
     });
 
     Route::group(['prefix' => '/meta'], function () {
-        Route::get("/count", function () {
-            return Book::count();
-        });
-        Route::get("/avg-pages", function () {
-            return Book::avg('pages');
-        });
+        Route::get("/count", [BookController::class, 'getCount']);
+        Route::get("/avg-pages", [BookController::class, 'getAvgPages']);
     });
 
-    Route::get("/dashboard", function () {
-        $oldestBook = Book::orderBy('year', 'asc')->first();
-        $newestBook = Book::orderBy('year', 'desc')->first();
-
-        return [
-            "books" => Book::count(),
-            "pages" => Book::sum('pages'),
-            "oldest" => $oldestBook ? $oldestBook->title : null,
-            "newest" => $newestBook ? $newestBook->title : null];
-    });
+    Route::get("/dashboard", [BookController::class, 'getDashboard']);
 });
