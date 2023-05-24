@@ -6,47 +6,47 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    function findAll()
+    public function findAll()
     {
         return Book::get();
     }
 
-    function findById($id)
+    public function findById($id)
     {
         return Book::find($id);
     }
 
-    function search($search)
+    public function search($search)
     {
         return Book::where('title', 'LIKE', '%' . $search . '%')->orWhere('author', 'LIKE', '%' . $search . '%')->get();
     }
 
-    function findBySlug($slug)
+    public function findBySlug($slug)
     {
         return Book::where('slug', $slug)->first();
     }
 
-    function findByYear($year)
+    public function findByYear($year)
     {
         return Book::where('year', $year)->get();
     }
 
-    function findByPages($pages)
+    public function findByPages($pages)
     {
         return Book::where('pages', '<', $pages)->get();
     }
 
-    function getCount()
+    public function getCount()
     {
         return Book::count();
     }
 
-    function getAvgPages()
+    public function getAvgPages()
     {
         return Book::avg('pages');
     }
 
-    function getDashboard()
+    public function getDashboard()
     {
         $oldestBook = Book::orderBy('year', 'asc')->first();
         $newestBook = Book::orderBy('year', 'desc')->first();
